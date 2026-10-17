@@ -1,8 +1,14 @@
 import { formatDate } from "../dates.js";
 import { formatMinor, parseMoneyToMinor } from "../money.js";
+import { ISSUES_PA, FRAME_PA } from "./grievance.pa.js";
+import { ISSUES_TA, FRAME_TA } from "./grievance.ta.js";
+import { ISSUES_MR, FRAME_MR } from "./grievance.mr.js";
+import { ISSUE_KEYS } from "./issues.js";
 
 // Letter templates in simple language. Each issue supplies the opening line,
 // the request and the suggested enclosures; the frame is shared per language.
+// English and Hindi are below; Punjabi, Tamil and Marathi are machine
+// translations in grievance.<lang>.js.
 
 const ISSUES = {
   en: {
@@ -73,6 +79,9 @@ const ISSUES = {
       enclosures: ["कोई भी सहायक स्क्रीनशॉट या दस्तावेज़"],
     },
   },
+  pa: ISSUES_PA,
+  ta: ISSUES_TA,
+  mr: ISSUES_MR,
 };
 
 const FRAME = {
@@ -100,9 +109,15 @@ const FRAME = {
     enclosures: "संलग्न:",
     signoff: "भवदीय,",
   },
+  pa: FRAME_PA,
+  ta: FRAME_TA,
+  mr: FRAME_MR,
 };
 
-export const ISSUE_KEYS = Object.keys(ISSUES.en);
+export { ISSUE_KEYS };
+
+/** The issue's label in the letter language, e.g. for the AI wording prompt. */
+export const issueLabel = (issue, lang) => (ISSUES[lang] ?? ISSUES.en)[issue].label;
 
 /**
  * Build a ready-to-send complaint letter from validated form data, in

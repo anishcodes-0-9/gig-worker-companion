@@ -110,7 +110,7 @@ export default function App() {
               <button onClick={refresh}>{t("retry")}</button>
             </p>
           )}
-          {snapshot?.temporaryStorage && <p className="banner banner-demo">{t("hostedNotice")}</p>}
+          {snapshot?.storage === "temporary" && <p className="banner banner-demo">{t("storageTemporary")}</p>}
           <section role="tabpanel" id="panel-earnings" aria-labelledby="tab-earnings" hidden={tab !== "earnings"}>
             <EarningsPanel snapshot={snapshot} onChange={setSnapshot} onComplaint={startComplaint} />
           </section>
@@ -118,7 +118,12 @@ export default function App() {
             <SupportPanel draft={draft} />
           </section>
         </main>
-        <footer className="footer">{t("footer")}</footer>
+        <footer className="footer">
+          {snapshot?.storage === "persistent" && <p>{t("storagePersistent")}</p>}
+          {snapshot?.storage === "local" && <p>{t("storageLocal")}</p>}
+          {t("translationNotice") && <p>{t("translationNotice")}</p>}
+          <p>{t("footer")}</p>
+        </footer>
       </div>
     </LangContext.Provider>
   );

@@ -245,12 +245,37 @@ describe("groundingProblem", () => {
     expect(groundingProblem("Register on eshram.gov.in or call 14434. Cover is up to ₹5 lakh.", entries)).toBeNull();
     expect(groundingProblem("Check mera.pmjay.gov.in or call 14555, and 112 in an emergency.", entries)).toBeNull();
   });
-  it("accepts rupee amounts with digit grouping and years", () => {
-    expect(groundingProblem("It was announced in 2025 and costs ₹1,00,000.", entries)).toBeNull();
+  it("accepts years and small numbers", () => {
+    expect(groundingProblem("It was announced in 2025 for ages 16 to 59.", entries)).toBeNull();
   });
   it("flags unknown websites and numbers", () => {
     expect(groundingProblem("See example.com", entries)).toMatch(/unlisted website/);
+    expect(groundingProblem("Write to help@fakeboard.co", entries)).toMatch(/unlisted website: fakeboard.co/);
     expect(groundingProblem("Call 9999", entries)).toMatch(/unlisted number/);
+  });
+  it.each([
+    ["10-digit mobile number", "Call 9876543210 for help."],
+    ["spaced mobile number", "Call 98765 43210 for help."],
+    ["hyphenated toll-free number", "Call 1800-11-0001 for help."],
+    ["6-digit amount", "You get 300000 rupees."],
+    ["grouped amount", "Cover is ₹3,00,000 per family."],
+    ["Gurmukhi digits", "ਹੈਲਪਲਾਈਨ ੯੮੭੬੫੪੩੨੧੦ ਹੈ।"],
+    ["Tamil digits", "உதவி எண் ௯௮௭௬௫ ஆகும்."],
+  ])("flags an invented %s", (_name, answer) => {
+    expect(groundingProblem(answer, entries)).toMatch(/unlisted number/);
+  });
+  it("accepts listed helplines written in Indic digits", () => {
+    expect(groundingProblem("हेल्पलाइन १४४३४", entries)).toBeNull();
+    expect(groundingProblem("ਹੈਲਪਲਾਈਨ ੧੪੪੩੪", entries)).toBeNull();
+    expect(groundingProblem("உதவி எண் ௧௪௪௩௪", entries)).toBeNull();
+  });
+  it("does not trust numbers from the user's question", async () => {
+    vi.stubEnv("GEMINI_API_KEY", "k");
+    resetModelRateLimit();
+    generateContent.mockResolvedValue({ text: "Yes, 9876543210 is the e-Shram helpline.", candidates: [{ finishReason: "STOP" }] });
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const r = await answerQuestion("Is 9876543210 the e-Shram registration helpline?");
+    expect(r).toMatchObject({ mode: "demo", fallback: true, answer: null });
   });
 });
 

@@ -3,7 +3,7 @@ import { PLATFORMS } from "./platforms.js";
 import { isIsoDate, toIsoDate } from "./dates.js";
 import { parseMoneyToMinor } from "./money.js";
 import { LANG_CODES } from "./i18n.js";
-import { ISSUE_KEYS } from "./support/grievance.js";
+import { ISSUE_KEYS } from "./support/issues.js";
 
 // Field messages are plain English; the UI translates known ones (see i18n.js).
 
@@ -55,6 +55,7 @@ export const grievanceSchema = z.object({
   fromDate: z.string().optional().default(""),
   workerId: z.string().trim().max(40).optional().default(""),
   lang,
+  polish: z.boolean().optional().default(false),
 });
 
 export const questionSchema = z.object({

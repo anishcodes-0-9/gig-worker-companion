@@ -1,7 +1,12 @@
-// UI strings for the supported languages. Hindi text was written for this app
-// and has not been reviewed by a professional translator.
+// UI strings for the supported languages. Hindi text was written for this app;
+// Punjabi, Tamil and Marathi (locales/*.js) are machine translations. None has
+// been reviewed by a professional translator, and the UI says so.
 
-export const LANGS = { en: "English", hi: "हिन्दी" };
+import { STRINGS_PA, MESSAGES_PA } from "./locales/pa.js";
+import { STRINGS_TA, MESSAGES_TA } from "./locales/ta.js";
+import { STRINGS_MR, MESSAGES_MR } from "./locales/mr.js";
+
+export const LANGS = { en: "English", hi: "हिन्दी", pa: "ਪੰਜਾਬੀ", ta: "தமிழ்", mr: "मराठी" };
 export const LANG_CODES = Object.keys(LANGS);
 
 const STRINGS = {
@@ -15,9 +20,13 @@ const STRINGS = {
     tabSupport: "Support Desk",
     loadError: "Could not load your records.",
     retry: "Retry",
-    footer: "Records are stored in a local file on this device's server. General information only, not legal advice.",
-    hostedNotice:
-      "Public demo: records are shared with everyone using this link and are deleted when the server restarts. Do not enter personal details.",
+    footer: "General information only, not legal advice.",
+    translationNotice: "",
+    storageTemporary:
+      "Demo storage: your records are kept separately for this browser, but only in temporary server memory, so they can disappear at any time. Do not enter personal details.",
+    storagePersistent:
+      "Your records are saved on the server for up to 90 days and linked to this browser by a private cookie. There is no login: clearing cookies or switching browsers means you lose access.",
+    storageLocal: "Records are stored in a file on the computer running this app, separately for each browser.",
 
     loading: "Loading your records…",
     summary: "Summary",
@@ -79,12 +88,12 @@ const STRINGS = {
     demoMode: "Demo mode — no AI.",
     demoFallback: "The AI answer was unavailable or did not pass our checks, so these are guide entries only.",
     demoNoKey: "No API key is configured, so you get guide entries instead of AI-written answers.",
-    demoEnable: "Set GEMINI_API_KEY on the server to enable AI mode.",
+    demoEnable: "AI answers are not switched on for this server.",
     emergencyCall: "If you are in danger or someone is hurt, call now:",
-    aiSummary: "AI summary of the entries below",
+    aiSummary: "AI answer, based only on the guide entries below",
     noAnswer: "I don't have a verified answer for that. Try rephrasing, or pick one of the topics I cover:",
     question: "Your question",
-    questionHint: "You can ask in English or Hindi.",
+    questionHint: "You can ask in any of the app's languages.",
     searching: "Searching…",
     ask: "Ask",
     askFailed: "Could not get an answer. Please try again.",
@@ -100,7 +109,7 @@ const STRINGS = {
 
     grievanceTitle: "Draft a complaint letter",
     grievanceIntro:
-      "Template-based letter in simple language, no AI needed. Review it, add your details, and send it to the platform's grievance officer.",
+      "A simple-language letter built from a template. Review it and send it to the platform's grievance officer yourself; this app does not send anything.",
     name: "Your name",
     issue: "Issue",
     issue_unpaid: "Unpaid earnings",
@@ -122,6 +131,11 @@ const STRINGS = {
     copy: "Copy letter",
     copied: "Copied to clipboard.",
     copyFailed: "Copy failed. Select the text and copy it manually.",
+    polishLabel: "Let AI tidy the wording of “What happened?” (facts are checked against what you typed)",
+    letterAi:
+      "Gemini reworded only the details paragraph. Names, dates, amounts and IDs come from your form, and the new wording was checked to keep the same numbers. Read every line before sending.",
+    letterFallback: "AI wording was unavailable or did not pass our fact check, so your own words are used.",
+    letterLanguage: "Letter language",
   },
 
   hi: {
@@ -134,9 +148,13 @@ const STRINGS = {
     tabSupport: "सहायता डेस्क",
     loadError: "आपके रिकॉर्ड लोड नहीं हो सके।",
     retry: "फिर से कोशिश करें",
-    footer: "रिकॉर्ड इस डिवाइस के सर्वर पर एक लोकल फ़ाइल में रखे जाते हैं। यह केवल सामान्य जानकारी है, कानूनी सलाह नहीं।",
-    hostedNotice:
-      "सार्वजनिक डेमो: रिकॉर्ड इस लिंक का इस्तेमाल करने वाले सभी लोगों को दिखते हैं और सर्वर रीस्टार्ट होने पर मिट जाते हैं। कोई निजी जानकारी न डालें।",
+    footer: "यह केवल सामान्य जानकारी है, कानूनी सलाह नहीं।",
+    translationNotice: "हिन्दी अनुवाद इस ऐप के लिए लिखा गया है; किसी पेशेवर अनुवादक ने इसकी समीक्षा नहीं की है।",
+    storageTemporary:
+      "डेमो स्टोरेज: आपके रिकॉर्ड इस ब्राउज़र के लिए अलग रखे जाते हैं, लेकिन सिर्फ़ सर्वर की अस्थायी मेमोरी में, इसलिए वे कभी भी मिट सकते हैं। कोई निजी जानकारी न डालें।",
+    storagePersistent:
+      "आपके रिकॉर्ड सर्वर पर 90 दिनों तक सेव रहते हैं और एक निजी कुकी से इस ब्राउज़र से जुड़े होते हैं। कोई लॉगिन नहीं है: कुकी मिटाने या ब्राउज़र बदलने पर आप इन्हें नहीं देख पाएँगे।",
+    storageLocal: "रिकॉर्ड इस ऐप को चलाने वाले कंप्यूटर की एक फ़ाइल में, हर ब्राउज़र के लिए अलग, रखे जाते हैं।",
 
     loading: "आपके रिकॉर्ड लोड हो रहे हैं…",
     summary: "सारांश",
@@ -198,12 +216,12 @@ const STRINGS = {
     demoMode: "डेमो मोड — AI नहीं।",
     demoFallback: "AI जवाब उपलब्ध नहीं था या हमारी जाँच में पास नहीं हुआ, इसलिए केवल गाइड जानकारी दिखाई जा रही है।",
     demoNoKey: "कोई API कुंजी सेट नहीं है, इसलिए AI जवाब की जगह गाइड जानकारी मिलती है।",
-    demoEnable: "AI मोड चालू करने के लिए सर्वर पर GEMINI_API_KEY सेट करें।",
+    demoEnable: "इस सर्वर पर AI जवाब चालू नहीं हैं।",
     emergencyCall: "अगर आप ख़तरे में हैं या कोई घायल है, तो अभी कॉल करें:",
-    aiSummary: "नीचे दी गई जानकारी का AI सारांश",
+    aiSummary: "AI जवाब, सिर्फ़ नीचे दी गई गाइड जानकारी पर आधारित",
     noAnswer: "इसका पक्का जवाब मेरे पास नहीं है। दूसरे शब्दों में पूछें, या इनमें से कोई विषय देखें:",
     question: "आपका सवाल",
-    questionHint: "आप हिन्दी या अंग्रेज़ी में पूछ सकते हैं।",
+    questionHint: "आप ऐप की किसी भी भाषा में पूछ सकते हैं।",
     searching: "खोज रहे हैं…",
     ask: "पूछें",
     askFailed: "जवाब नहीं मिल सका। फिर से कोशिश करें।",
@@ -219,7 +237,7 @@ const STRINGS = {
 
     grievanceTitle: "शिकायत पत्र तैयार करें",
     grievanceIntro:
-      "आसान भाषा में टेम्पलेट से बना पत्र, AI की ज़रूरत नहीं। इसे पढ़ें, अपनी जानकारी जोड़ें, और प्लेटफ़ॉर्म के शिकायत अधिकारी को भेजें।",
+      "टेम्पलेट से बना आसान भाषा का पत्र। इसे पढ़ें और ख़ुद प्लेटफ़ॉर्म के शिकायत अधिकारी को भेजें; यह ऐप कुछ भी नहीं भेजता।",
     name: "आपका नाम",
     issue: "समस्या",
     issue_unpaid: "बकाया कमाई",
@@ -240,7 +258,16 @@ const STRINGS = {
     copy: "पत्र कॉपी करें",
     copied: "कॉपी हो गया।",
     copyFailed: "कॉपी नहीं हुआ। टेक्स्ट चुनकर ख़ुद कॉपी करें।",
+    polishLabel: "AI से “क्या हुआ?” की भाषा सुधरवाएँ (तथ्य आपके लिखे से मिलाए जाते हैं)",
+    letterAi:
+      "Gemini ने सिर्फ़ विवरण वाले पैराग्राफ़ के शब्द बदले हैं। नाम, तारीख़, रकम और ID आपके फ़ॉर्म से आते हैं, और नए शब्दों में वही संख्याएँ होने की जाँच की गई है। भेजने से पहले हर पंक्ति पढ़ें।",
+    letterFallback: "AI से शब्द नहीं मिल सके या वे हमारी तथ्य-जाँच में पास नहीं हुए, इसलिए आपके अपने शब्द रखे गए हैं।",
+    letterLanguage: "पत्र की भाषा",
   },
+
+  pa: STRINGS_PA,
+  ta: STRINGS_TA,
+  mr: STRINGS_MR,
 };
 
 // Server messages are English; the UI translates the ones it knows.
@@ -268,7 +295,11 @@ const MESSAGES = {
     "Something went wrong": "कुछ गड़बड़ हो गई",
     "Record not found": "रिकॉर्ड नहीं मिला",
     "Request body is too large": "भेजी गई जानकारी बहुत बड़ी है",
+    "Record limit reached. Delete old records first.": "रिकॉर्ड की सीमा पूरी हो गई। पहले पुराने रिकॉर्ड हटाएँ।",
   },
+  pa: MESSAGES_PA,
+  ta: MESSAGES_TA,
+  mr: MESSAGES_MR,
 };
 
 /** Look up a UI string, falling back to English, and fill {placeholders}. */

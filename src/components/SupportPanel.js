@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/client";
-import { ISSUE_KEYS } from "@/lib/support/grievance";
+import { LANGS } from "@/lib/i18n";
+import { ISSUE_KEYS } from "@/lib/support/issues";
 import Field from "./Field";
 import { PlatformOptions } from "./EarningsPanel";
 import { useI18n } from "./LangContext";
@@ -144,13 +145,16 @@ function AskDesk({ mode }) {
   );
 }
 
-function GrievanceDesk({ draft }) {
+function GrievanceDesk({ draft, mode }) {
   const { lang, t, tm } = useI18n();
   const headingRef = useRef(null);
   const blank = { name: "", platform: "", issue: "unpaid", details: "", amount: "", fromDate: "", workerId: "" };
   const [values, setValues] = useState(blank);
   const [errors, setErrors] = useState({});
   const [letter, setLetter] = useState("");
+  const [letterLang, setLetterLang] = useState(null); // null: follow the UI language
+  const [polish, setPolish] = useState(false);
+  const [wording, setWording] = useState(null); // { wording: "ai" | "template", fallback? } of the last letter
   const [copied, setCopied] = useState("");
   const [busy, setBusy] = useState(false);
   const set = (name) => (e) => setValues((v) => ({ ...v, [name]: e.target.value }));
@@ -170,13 +174,16 @@ function GrievanceDesk({ draft }) {
     e.preventDefault();
     setBusy(true);
     setCopied("");
-    const { ok, data } = await api("/api/grievance", { method: "POST", body: JSON.stringify({ ...values, lang }) });
+    const body = { ...values, lang: letterLang ?? lang, polish: mode === "ai" && polish };
+    const { ok, data } = await api("/api/grievance", { method: "POST", body: JSON.stringify(body) });
     setBusy(false);
     if (ok) {
       setErrors({});
       setLetter(data.letter);
+      setWording({ wording: data.wording, fallback: data.fallback });
     } else {
       setLetter("");
+      setWording(null);
       setErrors(data.fields || { form: data.message || "" });
     }
   }
@@ -232,6 +239,25 @@ function GrievanceDesk({ draft }) {
         <Field id="g-details" label={t("details")} error={err("details")}>
           {(a) => <textarea {...a} rows={4} maxLength={1500} value={values.details} onChange={set("details")} required />}
         </Field>
+        <div className="grid">
+          <Field id="g-letterLang" label={t("letterLanguage")}>
+            {(a) => (
+              <select {...a} value={letterLang ?? lang} onChange={(e) => setLetterLang(e.target.value)}>
+                {Object.entries(LANGS).map(([code, label]) => (
+                  <option key={code} value={code} lang={code}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            )}
+          </Field>
+        </div>
+        {mode === "ai" && (
+          <label className="check">
+            <input type="checkbox" checked={polish} onChange={(e) => setPolish(e.target.checked)} />
+            {t("polishLabel")}
+          </label>
+        )}
         {"form" in errors && (
           <p role="alert" className="error">
             {errors.form ? tm(errors.form) : t("letterFailed")}
@@ -246,6 +272,8 @@ function GrievanceDesk({ draft }) {
       {letter && (
         <div className="letter-wrap">
           <h4>{t("yourLetter")}</h4>
+          {wording?.wording === "ai" && <p className="banner banner-ai">{t("letterAi")}</p>}
+          {wording?.fallback && <p className="banner banner-demo">{t("letterFallback")}</p>}
           <label htmlFor="letter" className="sr-only">
             {t("letterLabel")}
           </label>
@@ -272,7 +300,7 @@ export default function SupportPanel({ draft }) {
     <div className="stack">
       <h2 className="sr-only">{t("tabSupport")}</h2>
       <AskDesk mode={mode} />
-      <GrievanceDesk draft={draft} />
+      <GrievanceDesk draft={draft} mode={mode} />
     </div>
   );
 }

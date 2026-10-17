@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { STRINGS, translate, translateMessage } from "@/lib/i18n";
+import { MESSAGES, STRINGS, translate, translateMessage } from "@/lib/i18n";
+import { KB_TRANSLATIONS } from "@/lib/support/kb.i18n";
 import { KB } from "@/lib/support/kb";
 import { KB_HI, CATEGORIES_HI, EMERGENCY_LABELS_HI } from "@/lib/support/kb.hi";
 import { CATEGORIES, EMERGENCY_NUMBERS } from "@/lib/support/kb";
@@ -120,5 +121,62 @@ describe("toIsoDate time zone", () => {
   it("uses India time by default so late-evening UTC is already the next day", () => {
     expect(toIsoDate(new Date("2026-10-17T20:00:00Z"))).toBe("2026-10-18");
     expect(toIsoDate(new Date("2026-10-17T20:00:00Z"), "UTC")).toBe("2026-10-17");
+  });
+});
+
+describe.each(["hi", "pa", "ta", "mr"])("%s translation completeness", (lang) => {
+  const t = KB_TRANSLATIONS[lang];
+  const script = { hi: /[ऀ-ॿ]/, pa: /[਀-੿]/, ta: /[஀-௿]/, mr: /[ऀ-ॿ]/ }[lang];
+
+  it("has every UI string, with matching placeholders, in its own script", () => {
+    expect(Object.keys(STRINGS[lang]).sort()).toEqual(Object.keys(STRINGS.en).sort());
+    for (const key of Object.keys(STRINGS.en)) {
+      expect(placeholders(STRINGS[lang][key]), key).toEqual(placeholders(STRINGS.en[key]));
+    }
+    expect(STRINGS[lang].examples).toHaveLength(STRINGS.en.examples.length);
+    expect(STRINGS[lang].tabSupport).toMatch(script);
+    expect(STRINGS[lang].translationNotice).toBeTruthy(); // the UI must say it is unreviewed
+  });
+
+  it("translates every known server message", () => {
+    expect(Object.keys(MESSAGES[lang]).sort()).toEqual(Object.keys(MESSAGES.hi).sort());
+  });
+
+  it("covers every guide entry with the same steps, helplines and websites", () => {
+    expect(Object.keys(t.entries).sort()).toEqual(KB.map((e) => e.id).sort());
+    for (const e of KB) {
+      const local = t.entries[e.id];
+      expect(local.steps, e.id).toHaveLength(e.steps.length);
+      expect(numbers(entryText(local)), `${e.id} numbers`).toEqual(numbers(entryText(e)));
+      expect(hosts(entryText(local)), `${e.id} websites`).toEqual(hosts(entryText(e)));
+      expect(local.title, e.id).toMatch(script);
+    }
+    expect(Object.keys(t.categories).sort()).toEqual(Object.keys(CATEGORIES).sort());
+    for (const n of EMERGENCY_NUMBERS) expect(t.emergencyLabels[n.number], n.number).toBeTruthy();
+  });
+
+  it("matches its own example questions to the right entries", () => {
+    const [accident, eshram, , blocked] = STRINGS[lang].examples;
+    expect(retrieve(accident, 3).map((e) => e.id)).toContain("safety-accident");
+    expect(retrieve(eshram, 3).map((e) => e.id)).toContain("schemes-eshram");
+    expect(retrieve(blocked, 3).map((e) => e.id)).toContain("rights-deactivation");
+  });
+
+  it("flags the accident example as an emergency but not the e-Shram one", () => {
+    const [accident, eshram] = STRINGS[lang].examples;
+    expect(isEmergency(accident), accident).toBe(true);
+    expect(isEmergency(eshram), eshram).toBe(false);
+  });
+
+  it("writes every complaint letter in its own script with the facts intact", () => {
+    const input = { name: "Asha", platform: "Swiggy", lang, details: "4500 unpaid", amount: "4500", fromDate: "2026-09-20", workerId: "SW123" };
+    for (const issue of ISSUE_KEYS) {
+      const letter = draftGrievance({ ...input, issue }, "2026-10-17");
+      expect(letter, issue).toMatch(script);
+      expect(letter).toContain("Swiggy");
+      expect(letter).toContain("SW123");
+      expect(letter).toMatch(/Asha$/);
+    }
+    expect(draftGrievance({ ...input, issue: "unpaid" }, "2026-10-17")).toContain("₹4,500");
   });
 });
