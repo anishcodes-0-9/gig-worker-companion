@@ -113,8 +113,7 @@ export const STRINGS_MR = {
   amountInvolved: "संबंधित रक्कम (₹)",
   since: "कधीपासून (तारीख)",
   details: "काय झाले?",
-  prefillDetails:
-    "या तारखांची माझी कमाई मला मिळालेली नाही. मी ॲपमध्ये तक्रार केली होती, पण ती अजून सुटलेली नाही.",
+  prefillDetails: "या तारखांची माझी कमाई मला मिळालेली नाही.",
   creating: "तयार होत आहे…",
   createLetter: "पत्र तयार करा",
   letterFailed: "पत्र तयार होऊ शकले नाही.",

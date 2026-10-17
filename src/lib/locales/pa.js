@@ -114,7 +114,7 @@ export const STRINGS_PA = {
   since: "ਕਦੋਂ ਤੋਂ (ਤਾਰੀਖ਼)",
   details: "ਕੀ ਹੋਇਆ?",
   letterLanguage: "ਪੱਤਰ ਦੀ ਭਾਸ਼ਾ",
-  prefillDetails: "ਇਹਨਾਂ ਤਾਰੀਖ਼ਾਂ ਦੀ ਮੇਰੀ ਕਮਾਈ ਦੀ ਅਦਾਇਗੀ ਨਹੀਂ ਹੋਈ। ਮੈਂ ਐਪ ਵਿੱਚ ਸ਼ਿਕਾਇਤ ਕੀਤੀ ਸੀ, ਪਰ ਮਸਲਾ ਹੱਲ ਨਹੀਂ ਹੋਇਆ।",
+  prefillDetails: "ਇਹਨਾਂ ਤਾਰੀਖ਼ਾਂ ਦੀ ਮੇਰੀ ਕਮਾਈ ਦੀ ਅਦਾਇਗੀ ਨਹੀਂ ਹੋਈ।",
   creating: "ਬਣ ਰਿਹਾ ਹੈ…",
   createLetter: "ਪੱਤਰ ਬਣਾਓ",
   letterFailed: "ਪੱਤਰ ਨਹੀਂ ਬਣ ਸਕਿਆ।",

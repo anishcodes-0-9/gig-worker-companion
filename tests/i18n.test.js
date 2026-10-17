@@ -180,3 +180,13 @@ describe.each(["hi", "pa", "ta", "mr"])("%s translation completeness", (lang) =>
     expect(draftGrievance({ ...input, issue: "unpaid" }, "2026-10-17")).toContain("₹4,500");
   });
 });
+
+describe("pre-filled complaint details", () => {
+  // The "Draft complaint" prefill goes into a formal letter, so it must state only
+  // what the records show (unpaid earnings), never actions the worker may not have taken.
+  it.each(["en", "hi", "pa", "ta", "mr"])("%s states a single fact and no prior complaint", (lang) => {
+    const text = STRINGS[lang].prefillDetails;
+    expect(text.match(/[.।]/g), text).toHaveLength(1);
+    expect(text).not.toMatch(/raised|ticket|complain|शिकायत|ਸ਼ਿਕਾਇਤ|தெரிவித்தேன்|तक्रार/i);
+  });
+});

@@ -34,7 +34,7 @@ Each workspace is capped at 1,000 records per type. Past the cap, saving returns
 
 ## Languages
 
-The whole UI, the 14 guide entries, emergency labels, emergency keywords and the complaint letter exist in all five languages. Questions in any of them are matched to the same curated entries. Prefix matching is used for Indic scripts, because those languages add endings directly to words. In AI mode Gemini answers in the chosen language. The letter language can be chosen separately: for example, describe the problem in Tamil and get the letter in English.
+The whole UI, the 14 guide entries, emergency labels, emergency keywords and the complaint letter exist in all five languages. Questions in any of them are matched to the same curated entries. Prefix matching is used for Indic scripts, because those languages add endings directly to words. In AI mode Gemini answers in the chosen language. The letter language can be chosen separately from the UI language. The template parts of the letter follow the letter language. Your own details paragraph stays exactly as you wrote it, unless AI wording is on and the rewritten text passes the fact check. If that check rejects it, which is common when numbers are written as words, your original text is kept.
 
 - **Hindi** was written for this app.
 - **Punjabi, Tamil and Marathi** are machine translations made with an AI model during development and reviewed by no one.

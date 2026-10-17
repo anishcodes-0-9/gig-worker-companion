@@ -121,8 +121,7 @@ const STRINGS = {
     amountInvolved: "Amount involved (₹)",
     since: "Since (date)",
     details: "What happened?",
-    prefillDetails:
-      "My earnings from these dates have not been paid. I have raised this in the app but it is unresolved.",
+    prefillDetails: "My earnings from these dates have not been paid.",
     creating: "Creating…",
     createLetter: "Create letter",
     letterFailed: "Could not create the letter.",
@@ -249,7 +248,7 @@ const STRINGS = {
     amountInvolved: "संबंधित रकम (₹)",
     since: "कब से (तारीख़)",
     details: "क्या हुआ?",
-    prefillDetails: "इन तारीख़ों की मेरी कमाई का भुगतान नहीं हुआ है। मैंने ऐप में शिकायत की थी, लेकिन समस्या हल नहीं हुई।",
+    prefillDetails: "इन तारीख़ों की मेरी कमाई का भुगतान नहीं हुआ है।",
     creating: "बन रहा है…",
     createLetter: "पत्र बनाएँ",
     letterFailed: "पत्र नहीं बन सका।",
