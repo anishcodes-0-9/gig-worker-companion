@@ -133,6 +133,7 @@ const STRINGS = {
       "Gemini reworded only the details paragraph. Names, dates, amounts and IDs come from your form, and the new wording was checked to keep the same numbers. Read every line before sending.",
     letterFallback: "AI wording was unavailable or did not pass our fact check, so your own words are used.",
     letterLanguage: "Letter language",
+    langLoadFailed: "Could not load that language. Check your connection and try again.",
   },
 };
 
@@ -153,6 +154,27 @@ export async function loadLocale(lang) {
   const [strings, messages] = await LOADERS[lang]();
   STRINGS[lang] = strings;
   MESSAGES[lang] = messages;
+}
+
+/**
+ * Language switching where the latest choice wins: a slow download for an
+ * earlier choice can never replace a later one. `apply(lang)` runs once the
+ * strings are available; `onError(lang)` runs if the latest choice fails to
+ * load, and the current language stays in use.
+ */
+export function createLanguageSwitcher({ apply, onError, load = loadLocale }) {
+  let latest = null;
+  return async (lang) => {
+    if (!Object.hasOwn(LANGS, lang)) return;
+    latest = lang;
+    try {
+      await load(lang);
+    } catch {
+      if (latest === lang) onError(lang);
+      return;
+    }
+    if (latest === lang) apply(lang);
+  };
 }
 
 /** Look up a UI string, falling back to English, and fill {placeholders}. */

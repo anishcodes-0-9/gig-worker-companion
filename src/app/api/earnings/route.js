@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { handle, readJson } from "@/lib/api";
 import { AppError } from "@/lib/errors";
 import { toIsoDate } from "@/lib/dates";
-import { summarize } from "@/lib/earnings";
+import { RECENT_RECORDS, summarize } from "@/lib/earnings";
 import { add, load, remove, storageMode, KINDS } from "@/lib/store";
 import { entrySchema, payoutSchema } from "@/lib/validation";
 import { withWorkspace } from "@/lib/workspace";
@@ -10,6 +10,9 @@ import { withWorkspace } from "@/lib/workspace";
 export const dynamic = "force-dynamic";
 
 // Every read, write and delete is scoped to the caller's cookie-derived workspace.
+// The summary (totals, balances, overdue amounts) is computed from all records;
+// only the most recent ones are listed, which is all the UI shows, so the
+// response size does not grow with the workspace's history.
 
 async function snapshot(workspaceId) {
   const data = await load(workspaceId);
@@ -17,8 +20,8 @@ async function snapshot(workspaceId) {
   const byDateDesc = (a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt);
   return {
     today,
-    entries: [...data.entries].sort(byDateDesc),
-    payouts: [...data.payouts].sort(byDateDesc),
+    entries: [...data.entries].sort(byDateDesc).slice(0, RECENT_RECORDS),
+    payouts: [...data.payouts].sort(byDateDesc).slice(0, RECENT_RECORDS),
     summary: summarize(data, today),
     storage: storageMode(),
   };

@@ -119,7 +119,7 @@ function History({ title, kind, items, onDelete }) {
     <section className="card" aria-label={title}>
       <h3>{title}</h3>
       <ul className="history">
-        {items.slice(0, 15).map((item) => (
+        {items.map((item) => (
           <li key={item.id}>
             <div>
               <strong>{money(item.amountMinor)}</strong> · {item.platform}

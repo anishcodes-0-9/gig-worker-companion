@@ -41,6 +41,8 @@ body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 syst
 .lang-switch { display: flex; gap: 6px; flex-wrap: wrap; }
 .lang-switch button { background: transparent; color: var(--primary-text); border-color: var(--primary-text); }
 .lang-switch button[aria-pressed="true"] { background: var(--primary-text); color: var(--primary); }
+/* The default focus ring is var(--primary), the header's own background, so it would be invisible here. */
+.app-header :focus-visible { outline-color: var(--primary-text); }
 .skip-link { position: absolute; left: -999px; top: 0; background: var(--surface); color: var(--text); padding: 8px 12px; z-index: 10; }
 .skip-link:focus { left: 8px; top: 8px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

@@ -114,6 +114,7 @@ export const STRINGS_PA = {
   since: "ਕਦੋਂ ਤੋਂ (ਤਾਰੀਖ਼)",
   details: "ਕੀ ਹੋਇਆ?",
   letterLanguage: "ਪੱਤਰ ਦੀ ਭਾਸ਼ਾ",
+  langLoadFailed: "ਉਹ ਭਾਸ਼ਾ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ। ਆਪਣਾ ਕਨੈਕਸ਼ਨ ਜਾਂਚੋ ਅਤੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
   prefillDetails: "ਇਹਨਾਂ ਤਾਰੀਖ਼ਾਂ ਦੀ ਮੇਰੀ ਕਮਾਈ ਦੀ ਅਦਾਇਗੀ ਨਹੀਂ ਹੋਈ।",
   creating: "ਬਣ ਰਿਹਾ ਹੈ…",
   createLetter: "ਪੱਤਰ ਬਣਾਓ",

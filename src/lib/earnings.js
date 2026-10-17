@@ -3,6 +3,9 @@ import { addDays, diffDays, weekStart } from "./dates.js";
 /** A payout older than this many days with unpaid earnings is flagged as overdue. */
 export const OVERDUE_DAYS = 7;
 
+/** How many of the most recent entries and payouts the API returns for display. */
+export const RECENT_RECORDS = 15;
+
 const sum = (items, pick) => items.reduce((total, item) => total + pick(item), 0);
 
 function totals(entries) {

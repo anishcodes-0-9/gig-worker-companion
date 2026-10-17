@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/client";
-import { LANGS, loadLocale, translate, translateMessage } from "@/lib/i18n";
+import { LANGS, createLanguageSwitcher, translate, translateMessage } from "@/lib/i18n";
 import EarningsPanel from "./EarningsPanel";
 import SupportPanel from "./SupportPanel";
 import { LangContext } from "./LangContext";
@@ -19,18 +19,22 @@ export default function App() {
   const [snapshot, setSnapshot] = useState(null);
   const [loadError, setLoadError] = useState(null); // null, or the server message ("" if none)
   const [draft, setDraft] = useState(null); // prefill for the grievance form
+  const [langError, setLangError] = useState(false); // the chosen language failed to download
   const tabRefs = useRef({});
   const t = (key, vars) => translate(lang, key, vars);
 
-  // Non-English strings are fetched on first use; switch only once they have
-  // loaded, and stay on the current language if the download fails.
-  const chooseLang = useCallback(async (code) => {
-    if (!Object.hasOwn(LANGS, code)) return;
-    try {
-      await loadLocale(code);
-      setLang(code);
-    } catch {}
-  }, []);
+  // Non-English strings are fetched on first use. Switch only once they have
+  // loaded, let the latest choice win, and keep the current language (with a
+  // message) if the download fails.
+  const [chooseLang] = useState(() =>
+    createLanguageSwitcher({
+      apply: (code) => {
+        setLangError(false);
+        setLang(code);
+      },
+      onError: () => setLangError(true),
+    }),
+  );
 
   // Remember the language per browser; storage may be unavailable (private mode).
   useEffect(() => {
@@ -113,6 +117,11 @@ export default function App() {
           ))}
         </div>
         <main id="main" tabIndex={-1}>
+          {langError && (
+            <p role="alert" className="banner banner-error">
+              {t("langLoadFailed")}
+            </p>
+          )}
           {loadError !== null && (
             <p role="alert" className="banner banner-error">
               {loadError ? translateMessage(lang, loadError) : t("loadError")}{" "}
