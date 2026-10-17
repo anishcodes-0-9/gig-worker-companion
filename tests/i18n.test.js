@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { MESSAGES, STRINGS, translate, translateMessage } from "@/lib/i18n";
+import { beforeAll, describe, expect, it } from "vitest";
+import { LANG_CODES, MESSAGES, STRINGS, loadLocale, translate, translateMessage } from "@/lib/i18n";
 import { KB_TRANSLATIONS } from "@/lib/support/kb.i18n";
 import { KB } from "@/lib/support/kb";
 import { KB_HI, CATEGORIES_HI, EMERGENCY_LABELS_HI } from "@/lib/support/kb.hi";
@@ -8,6 +8,9 @@ import { isEmergency, retrieve } from "@/lib/support/retrieve";
 import { draftGrievance, ISSUE_KEYS } from "@/lib/support/grievance";
 import { toIsoDate } from "@/lib/dates";
 import { grievanceSchema, questionSchema } from "@/lib/validation";
+
+// Non-English strings load on demand in the app; load them all for these checks.
+beforeAll(() => Promise.all(LANG_CODES.map(loadLocale)));
 
 const placeholders = (s) => (typeof s === "string" ? [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort() : []);
 const numbers = (s) => [...new Set(s.match(/\b\d{3,5}\b/g) ?? [])].sort();

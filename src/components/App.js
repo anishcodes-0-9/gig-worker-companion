@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/client";
-import { LANGS, translate, translateMessage } from "@/lib/i18n";
+import { LANGS, loadLocale, translate, translateMessage } from "@/lib/i18n";
 import EarningsPanel from "./EarningsPanel";
 import SupportPanel from "./SupportPanel";
 import { LangContext } from "./LangContext";
@@ -22,13 +22,22 @@ export default function App() {
   const tabRefs = useRef({});
   const t = (key, vars) => translate(lang, key, vars);
 
+  // Non-English strings are fetched on first use; switch only once they have
+  // loaded, and stay on the current language if the download fails.
+  const chooseLang = useCallback(async (code) => {
+    if (!Object.hasOwn(LANGS, code)) return;
+    try {
+      await loadLocale(code);
+      setLang(code);
+    } catch {}
+  }, []);
+
   // Remember the language per browser; storage may be unavailable (private mode).
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(LANG_STORAGE_KEY);
-      if (saved in LANGS) setLang(saved);
+      chooseLang(localStorage.getItem(LANG_STORAGE_KEY));
     } catch {}
-  }, []);
+  }, [chooseLang]);
   useEffect(() => {
     document.documentElement.lang = lang;
     try {
@@ -79,7 +88,7 @@ export default function App() {
           </div>
           <div className="lang-switch" role="group" aria-label={t("language")}>
             {Object.entries(LANGS).map(([code, label]) => (
-              <button key={code} lang={code} aria-pressed={lang === code} onClick={() => setLang(code)}>
+              <button key={code} lang={code} aria-pressed={lang === code} onClick={() => chooseLang(code)}>
                 {label}
               </button>
             ))}
